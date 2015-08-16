@@ -1,0 +1,70 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/1.6.1/plottable.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/1.6.1/plottable.min.css">
+</head>
+<body>
+  <svg id="example"></svg>
+  <script type="text/javascript">
+    // Our code will go here
+    var data = [
+     { hoursStudied: 1, testScore: 1 },
+     { hoursStudied: 2, testScore: 3 },
+     { hoursStudied: 3, testScore: 2 },
+     { hoursStudied: 4, testScore: 4 },
+     { hoursStudied: 5, testScore: 3 },
+     { hoursStudied: 6, testScore: 5 }
+    ];
+    var dataSet = new Plottable.Dataset(data, { name: "Test Scores" });
+
+    var studentData = [
+      { hoursStudied: 1, students: 10 },
+      { hoursStudied: 2, students: 12 },
+      { hoursStudied: 3, students: 15 },
+      { hoursStudied: 4, students: 7 },
+      { hoursStudied: 5, students: 3 },
+      { hoursStudied: 6, students: 2 }
+    ];
+    var studentDataSet = new Plottable.Dataset(studentData, { name: "Students" });
+
+    var plot = new Plottable.Plots.Line();
+    plot.addDataset(dataSet);
+    var xAccessor = function(datum, index, dataset) {
+      return datum.hoursStudied;
+    };
+    var xScale = new Plottable.Scales.Category();
+    plot.x(xAccessor, xScale);
+    var yScale = new Plottable.Scales.Linear();
+    var yAccessor = function(datum, index, dataset) {
+      return datum.testScore;
+    };
+    plot.y(yAccessor, yScale);
+
+    var yStudentsScale = new Plottable.Scales.Linear();
+    var barPlot = new Plottable.Plots.Bar();
+    barPlot.addDataset(studentDataSet);
+    barPlot.x(function(d) { return d.hoursStudied; }, xScale);
+    barPlot.y(function(d) { return d.students; }, yStudentsScale);
+    barPlot.attr('opacity', 0.3);
+
+    var xAxis = new Plottable.Axes.Category(xScale, "bottom");
+    var yAxis = new Plottable.Axes.Numeric(yScale, "left");
+    var xLabel = new Plottable.Components.AxisLabel("Hours Studied");
+    var yLabel = new Plottable.Components.AxisLabel(dataSet.metadata().name, 270);
+
+    var yStudentsAxis = new Plottable.Axes.Numeric(yStudentsScale, "left");
+    var yStudentsLabel = new Plottable.Components.AxisLabel(studentDataSet.metadata().name, 270);
+
+    var group = new Plottable.Components.Group([ barPlot, plot ]);
+
+    var table = new Plottable.Components.Table([
+      [yLabel, yAxis, group, yStudentsAxis, yStudentsLabel],
+      [null, null, xAxis, null, null],
+      [null, null, xLabel, null, null ]
+    ]);
+
+    table.renderTo("svg#example");
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/1.6.1/plottable.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/1.6.1/plottable.min.css">
+</head>
+<body>
+  <svg id="example"></svg>
+  <script type="text/javascript">
+    // Our code will go here
+    var data = [
+     { hoursStudied: 1, testScore: 1 },
+     { hoursStudied: 2, testScore: 3 },
+     { hoursStudied: 3, testScore: 2 },
+     { hoursStudied: 4, testScore: 4 },
+     { hoursStudied: 5, testScore: 3 },
+     { hoursStudied: 6, testScore: 5 }
+    ];
+
+    var dataSet = new Plottable.Dataset(data, { name: "Test Scores" });
+
+    var plot = new Plottable.Plots.Line();
+    plot.addDataset(dataSet);
+
+    var xAccessor = function(datum, index, dataset) {
+      return datum.hoursStudied;
+    };
+    var xScale = new Plottable.Scales.Category();
+    plot.x(xAccessor, xScale);
+
+    var yScale = new Plottable.Scales.Linear();
+    var yAccessor = function(datum, index, dataset) {
+      return datum.testScore;
+    };
+    plot.y(yAccessor, yScale);
+
+    plot.renderTo("svg#example");
+  </script>
+</body>
+</html>
